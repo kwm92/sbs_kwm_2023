@@ -1,24 +1,45 @@
 package com.kwm.exam.demo.repository;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import com.kwm.exam.demo.vo.Member;
 
 @Mapper
 public interface MemberRepository {
 
 //	public Member getMember(@Param("loginId") String loginId);
-//	
-//	public List<Member> getMembers();
-//	
+
+	@Select("""
+			SELECT *
+			FROM `member`
+			ORDER BY
+			id DESC
+			""")
+	public List<Member> getMembers();
+	
 //	public void insertMember(@Param("loginId")String loginId, @Param("loginPw")String loginPw,@Param("name")String name,
 //			@Param("nickname")String nickname, @Param("cellphoneNo")String cellphoneNo, @Param("email")String email);
-//	
+	
 //	public void modifyMember(@Param("loginPw")String loginPw,@Param("name")String name);
-//
+
 //	public void deleteMember(@Param("loginId")String loginId);
-//	
-//	public int getLastInsertId();
+	
+	@Select("SELECT LAST_INSERT_ID()")
+	int getLastInsertId();
+	
+	
+	@Select("""
+			SELECT * 
+			FROM `member` AS M
+			WHERE M.id = #{id}
+			""")
+	Member getMemberById(@Param("id") int id);
+	
 	
 	@Insert("""
 			
@@ -34,5 +55,6 @@ public interface MemberRepository {
 
 	void join(@Param("loginId") String loginId, @Param("loginPw") String loginPw, @Param("name") String name,
 			@Param("nickname") String nickname, @Param("cellphoneNo") String cellphoneNo, @Param("email") String email);
+
 
 }

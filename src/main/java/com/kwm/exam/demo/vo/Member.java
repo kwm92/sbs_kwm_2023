@@ -16,10 +16,12 @@ public class Member {
 	private Date updateDate;
 	private String loginId;
 	private String loginPw;
+	private int authLevel;
 	private String name;
 	private String nickname;
 	private String celphoneNo;
 	private String email;
-	
+	private boolean delStatus;
+	private String delDate;
 	
 }
