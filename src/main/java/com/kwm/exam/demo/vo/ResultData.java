@@ -19,6 +19,10 @@ public class ResultData {
 
 	}
 
+	public static ResultData from(String resultCode, String msg) {
+		return from(resultCode, msg, null);
+	}
+
 	public static ResultData from(String resultCode, String msg, Object data1) {
 		ResultData rd = new ResultData();
 		rd.resultCode = resultCode;
@@ -35,4 +39,5 @@ public class ResultData {
 	public boolean isFail() {
 		return isSuccess() == false;
 	}
+
 }
