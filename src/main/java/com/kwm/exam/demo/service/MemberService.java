@@ -22,7 +22,7 @@ public class MemberService {
 //	public Member getMember(String loginId) {
 //		return memberRepository.getMember(loginId);
 //	}
-//	
+	
 	public List<Member> getMembers() {
 		return memberRepository.getMembers();
 	}
