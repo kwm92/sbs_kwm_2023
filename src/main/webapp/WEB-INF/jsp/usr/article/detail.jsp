@@ -11,6 +11,14 @@ params.id = parseInt('${param.id}');
 
 <script>
 function ArticleDetail__increaseHitCount() {
+	const localStorageKey = 'article__' + params.id + '__viewDone';
+	
+	if(localStorage.getItem(localStorageKey)) {
+		return;
+	}
+	
+	localStorage.setItem(localStorageKey,true);
+	
 	$.get(
 		'../article/doIncreaseHitCountRd',{
 			id : params.id,
@@ -24,7 +32,7 @@ $(function() {
 	//ArticleDetail__increaseHitCount();
 	
 	//임시코드
-	setTimeout(ArticleDetail__increaseHitCount,3000);
+	setTimeout(ArticleDetail__increaseHitCount,1000);
 })
 </script>
 
