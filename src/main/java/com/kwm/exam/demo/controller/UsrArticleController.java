@@ -88,6 +88,15 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/detail")
 	public String showDetail(Model model, int id) {
+
+		ResultData increaseHitCountRd = articleService.increaseHitCount(id);
+
+		if (increaseHitCountRd.isFail()) {
+			return rq.historyBackJsOnview(increaseHitCountRd.getMsg());
+		}
+
+		System.out.println(increaseHitCountRd);
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		model.addAttribute("article", article);
@@ -98,7 +107,10 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/getArticle")
 	@ResponseBody
 	public ResultData<Article> getArticle(HttpServletRequest req, int id) {
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
+
+		articleService.increaseHitCount(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물이 존재하지 않습니다.", id));
@@ -127,6 +139,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/modify")
 	public String ShowModify(Model model, int id, String title, String body) {
+
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		if (article == null) {

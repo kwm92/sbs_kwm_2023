@@ -143,3 +143,9 @@ select now(), now(), FLOOR(RAND() *2) +1, FLOOR(RAND() *2) +1, concat('제목_',
 from article;
 */
 SELECT * FROM article;
+
+DESC article
+
+ALTER TABLE article
+ADD COLUMN hitCount INT(10) UNSIGNED NOT NULL DEFAULT 0;
+
