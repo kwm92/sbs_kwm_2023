@@ -13,7 +13,7 @@ params.id = parseInt('${param.id}');
 function ArticleDetail__increaseHitCount() {
 	$.get(
 		'../article/doIncreaseHitCountRd',{
-			id : params.id
+			id : params.id,
 			ajaxMode : 'Y'
 		}, function(data)	 {
 			$('.article-detail__hit-count').empty().html(data.data1);			
