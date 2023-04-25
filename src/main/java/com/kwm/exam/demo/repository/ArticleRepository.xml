@@ -5,7 +5,8 @@
 	<insert id="writeArticle">
 		INSERT INTO article
 		SET regDate = NOW(),
-		updateDate = NOW(),
+		updateDate =
+		NOW(),
 		boardId = #{boardId},
 		memberId = #{memberId},
 		title = #{title},
@@ -16,7 +17,8 @@
 		SELECT A.*,
 		M.nickname AS extra__writerName
 		FROM article AS A
-		LEFT JOIN MEMBER AS M
+		LEFT JOIN
+		MEMBER AS M
 		ON A.memberId = M.id
 		<if test="boardId != 0">
 			WHERE A.boardId = #{boardId}
@@ -28,20 +30,38 @@
 	</select>
 
 	<select id="getForPrintArticle" resultType="Article">
-		 SELECT A.*,
-	     M.nickname AS extra__writerName
-	     FROM article AS A
-	     LEFT JOIN member AS M
-	     ON A.memberId = M.id
-		 WHERE A.id = #{id}
+		SELECT A.*,
+		M.nickname AS extra__writerName
+		FROM article AS A
+		LEFT JOIN member AS M
+		ON A.memberId = M.id
+		WHERE A.id = #{id}
 	</select>
-	
-	
-	<select id ="getArticlesCount" resultType="int">
+
+
+	<select id="getArticlesCount" resultType="int">
 		SELECT COUNT(*) AS cnt
 		FROM article AS A
 		<if test="boardId !=0">
 			WHERE A.boardId = #{boardId}
+		</if>
+		<if test="searchKeyword != ''">
+			<choose>
+				<when test="searchKeywordTypeCode == 'title'">
+					AND A.title LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<when test="searchKeywordTypeCode == 'body'">
+					AND A.body LIKE CONCAT('%',#{searchKeyword},'%')
+				</when>
+				<otherwise>
+					AND (
+						A.title LIKE CONCAT('%',#{searchKeyword},'%')
+						OR
+						A.body LIKE CONCAT('%',#{searchKeyword},'%')
+					)
+				
+				</otherwise>
+			</choose>
 		</if>
 	</select>
 
@@ -64,7 +84,7 @@
 			<if test="body != null and body != ''">
 				body = #{body},
 			</if>
-		updateDate = NOW()
+			updateDate = NOW()
 		</set>
 		WHERE id = #{id}
 	</update>
