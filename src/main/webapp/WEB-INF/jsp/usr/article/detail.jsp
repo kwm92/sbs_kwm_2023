@@ -1,8 +1,7 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"  %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="pageTitle" value="게시물 내용"/>
-<%@include file="../common/head.jspf" %>   
+<%@include file="../common/head.jspf" %>
 
 <script>
 const params = {}
@@ -10,29 +9,30 @@ params.id = parseInt('${param.id}');
 </script>
 
 <script>
-function ArticleDetail__increaseHitCount() {
+function ArticleDetail__increseHitCount() {
 	const localStorageKey = 'article__' + params.id + '__viewDone';
 	
-	if(localStorage.getItem(localStorageKey)) {
+	if (localStorage.getItem(localStorageKey)) {
 		return;
 	}
 	
-	localStorage.setItem(localStorageKey,true);
+	localStorage.setItem(localStorageKey, true);
 	
 	$.get(
-		'../article/doIncreaseHitCountRd',{
+		'../article/doIncreaseHitCountRd', {
 			id : params.id,
 			ajaxMode : 'Y'
-		}, function(data)	 {
-			$('.article-detail__hit-count').empty().html(data.data1);			
+		}, function(data) {
+			$('.article-detail__hit-count').empty().html(data.data1);
 		}, 'json');
 }
+
 $(function() {
-	//실전
-	//ArticleDetail__increaseHitCount();
+	// 실전코드
+	// ArticleDetail__increseHitCount();
 	
-	//임시코드
-	setTimeout(ArticleDetail__increaseHitCount,1000);
+	// 임시코드
+	setTimeout(ArticleDetail__increseHitCount, 300);
 })
 </script>
 
@@ -63,7 +63,26 @@ $(function() {
           <tr>
             <th>조회수</th>
             <td>
-				<span class="badge badge-primary article-detail__hit-count">${article.hitCount }</span>
+            	<span class="text-blue-700 article-detail__hit-count">${article.hitCount}</span>
+			</td>
+          </tr>
+          <tr>
+            <th>추천</th>
+            <td>
+            	<div class="flex items-center">
+            		<span class="text-blue-700">${article.extra__goodReactionPoint}</span>
+            		<span>&nbsp;</span>
+            		
+            		<c:if test="${actorCanMakeReactionPoint}">
+	            		<button class="btn btn-xs btn-outline btn-primary">
+	            			좋아요 👍
+	            		</button>
+	            		<span>&nbsp;</span>
+						<button class="btn btn-xs btn-outline btn-secondary">
+							싫어요 👎
+						</button>
+            		</c:if>
+            	</div>
 			</td>
           </tr>
           <tr>
@@ -84,14 +103,14 @@ $(function() {
 	
 	<div class="btns">
 		<button class="btn btn-link" type="button" onclick="history.back();">뒤로가기</button>
-		<c:if test="${article.extra__actorCanModify }">
-		<a class="btn btn-link"" href="../article/modify?id=${article.id }">게시물 수정</a>	
+		<c:if test="${article.extra__actorCanModify}">
+			<a class="btn btn-link" href="../article/modify?id=${article.id}">게시물 수정</a>
 		</c:if>
-		<c:if test="${article.extra__actorCanDelete }">
-			<a class="btn btn-link"" onclick="if( confirm('정말 삭제하시겠습니까?')==false) return false;" href="../article/doDelete?id=${article.id }">게시물 삭제</a>	
+		
+		<c:if test="${article.extra__actorCanDelete}">
+			<a class="btn btn-link" onclick="if( confirm('정말 삭제하시겠습니까?') == false )return false;" href="../article/doDelete?id=${article.id}">게시물 삭제</a>
 		</c:if>
 	</div>
-    </div>
+  </div>
 </section>
-
-<%@include file="../common/foot.jspf" %>	
+ <%@include file="../common/foot.jspf" %>

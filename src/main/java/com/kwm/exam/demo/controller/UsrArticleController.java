@@ -61,7 +61,7 @@ public class UsrArticleController {
 	@RequestMapping("/usr/article/list")
 	public String showList(Model model, @RequestParam(defaultValue = "1") int boardId,
 			@RequestParam(defaultValue = "1") int page,
-			@RequestParam(defaultValue = "title,body") String searchKeywordTypeCode,
+			@RequestParam(defaultValue = "title, body") String searchKeywordTypeCode,
 			@RequestParam(defaultValue = "") String searchKeyword) {
 		Board board = boardService.getBoardById(boardId);
 
@@ -73,8 +73,7 @@ public class UsrArticleController {
 		int itemsCountInAPage = 10;
 		int pagesCount = (int) Math.ceil((double) articlesCount / itemsCountInAPage);
 
-		List<Article> articles = articleService.getForPrintArticles(rq.getLoginedMemberId(), boardId,
-				searchKeywordTypeCode, searchKeyword, itemsCountInAPage, page);
+		List<Article> articles = articleService.getForPrintArticles(rq.getLoginedMemberId(), boardId, searchKeywordTypeCode, searchKeyword, itemsCountInAPage, page);
 
 		model.addAttribute("board", board);
 		model.addAttribute("boardId", boardId);
@@ -87,39 +86,38 @@ public class UsrArticleController {
 	}
 
 	@RequestMapping("/usr/article/detail")
-	public String showDetail(Model model, int id) {
-
+	public String showDetail(Model model, int id) {		
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
-
+		
+		boolean actorCanMakeReactionPoint = articleService.actorCanMakeReactionPoint(rq.getLoginedMemberId(), id);
+		
+		model.addAttribute("actorCanMakeReactionPoint", actorCanMakeReactionPoint);
 		model.addAttribute("article", article);
 
 		return "usr/article/detail";
 	}
-
+	
+	
 	@RequestMapping("/usr/article/doIncreaseHitCountRd")
 	@ResponseBody
 	public ResultData<Integer> doIncreaseHitCountRd(int id) {
 		ResultData<Integer> increaseHitCountRd = articleService.increaseHitCount(id);
-
+		
 		if (increaseHitCountRd.isFail()) {
 			return increaseHitCountRd;
 		}
 		
 		ResultData<Integer> rd = ResultData.newData(increaseHitCountRd, "hitCount", articleService.getArticleHitCount(id));
 		
-		rd.setData2("id",id);
+		rd.setData2("id", id);
 		
 		return rd;
-
 	}
 
 	@RequestMapping("/usr/article/getArticle")
 	@ResponseBody
-	public ResultData<Article> getArticle(HttpServletRequest req, int id) {
-
+	public ResultData<Article> getArticle(int id) {
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
-
-		articleService.increaseHitCount(id);
 
 		if (article == null) {
 			return ResultData.from("F-1", Ut.f("%d번 게시물이 존재하지 않습니다.", id));
@@ -130,7 +128,7 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/doDelete")
 	@ResponseBody
-	public String doDelete(HttpServletRequest req, int id) {
+	public String doDelete(int id) {
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		if (article == null) {
@@ -148,7 +146,6 @@ public class UsrArticleController {
 
 	@RequestMapping("/usr/article/modify")
 	public String ShowModify(Model model, int id, String title, String body) {
-
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 
 		if (article == null) {
