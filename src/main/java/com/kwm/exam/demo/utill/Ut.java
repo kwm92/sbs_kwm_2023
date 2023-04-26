@@ -1,19 +1,19 @@
 package com.kwm.exam.demo.utill;
 
+import java.net.URLEncoder;
+
 public class Ut {
-
 	public static boolean empty(Object obj) {
-		// null 체크
-		if (obj == null) {
+		if ( obj == null ) {
 			return true;
 		}
-		// string 체크
-		if (obj instanceof String == false) {
+		
+		if ( obj instanceof String == false ) {
 			return true;
 		}
-
+		
 		String str = (String) obj;
-
+		
 		return str.trim().length() == 0;
 	}
 
@@ -22,7 +22,6 @@ public class Ut {
 	}
 
 	public static String jsHistoryBack(String msg) {
-
 		return Ut.f("""
 				<script>
 				const msg = '%s'.trim();
@@ -33,17 +32,16 @@ public class Ut {
 				</script>
 				""", msg);
 	}
-
+	
 	public static String jsReplace(String msg, String uri) {
-
-		if (msg == null) {
+		if ( msg == null ) {
 			msg = "";
 		}
-
-		if (uri == null) {
+		
+		if ( uri == null ) {
 			uri = "";
 		}
-
+		
 		return Ut.f("""
 				<script>
 				const msg = '%s'.trim();
@@ -55,4 +53,11 @@ public class Ut {
 				""", msg, uri);
 	}
 
+	public static String getUriEncoded(String str) {
+		try	{
+			return URLEncoder.encode(str, "UTF-8");
+		} catch (Exception e) {
+			return str;
+		}
+	}
 }
