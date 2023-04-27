@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.kwm.exam.demo.service.ArticleService;
 import com.kwm.exam.demo.service.BoardService;
 import com.kwm.exam.demo.service.ReactionPointService;
+import com.kwm.exam.demo.service.ReplyService;
 import com.kwm.exam.demo.utill.Ut;
 import com.kwm.exam.demo.vo.Article;
 import com.kwm.exam.demo.vo.Board;
+import com.kwm.exam.demo.vo.Reply;
 import com.kwm.exam.demo.vo.ResultData;
 import com.kwm.exam.demo.vo.Rq;
 
@@ -24,13 +26,15 @@ public class UsrArticleController {
 	private ArticleService articleService;
 	private BoardService boardService;
 	private ReactionPointService reactionPointService;
+	private ReplyService replyService;
 	private Rq rq;
 
 	public UsrArticleController(ArticleService articleService, BoardService boardService,
-			ReactionPointService reactionPointService, Rq rq) {
+			ReactionPointService reactionPointService, ReplyService replyService, Rq rq) {
 		this.articleService = articleService;
 		this.boardService = boardService;
 		this.reactionPointService = reactionPointService;
+		this.replyService = replyService;
 		this.rq = rq;
 	}
 
@@ -95,13 +99,18 @@ public class UsrArticleController {
 		Article article = articleService.getForPrintArticle(rq.getLoginedMemberId(), id);
 		model.addAttribute("article", article);
 
+		List<Reply> replies = replyService.getForPrintReplies(rq.getLoginedMemberId(), "article", id);
+
+		int repliesCount = replies.size();
+		model.addAttribute("repliesCount", repliesCount);
+
 		ResultData actorCanMakeReactionPointRd = reactionPointService.actorCanMakeReactionPoint(rq.getLoginedMemberId(),
 				"article", id);
 
 		model.addAttribute("actorCanMakeReaction", actorCanMakeReactionPointRd.isSuccess());
 
 		if (actorCanMakeReactionPointRd.getResultCode().equals("F-2")) {
-			int sumReactionPointByMemberId = (int)actorCanMakeReactionPointRd.getData1();
+			int sumReactionPointByMemberId = (int) actorCanMakeReactionPointRd.getData1();
 
 			if (sumReactionPointByMemberId > 0) {
 				model.addAttribute("actorCanCancelGoodReaction", true);

@@ -306,4 +306,25 @@ A.badReactionPoint = RP_SUM.badReactionPoint;
     `body` = '댓글4';
     
     SELECT * FROM reply;
+
+    #댓글 수 많을떄
+    EXPLAIN SELECT R.*,
+	M.nickname AS extra__writerName
+	FROM reply AS R
+	LEFT JOIN `member` AS M
+	ON R.memberId = M.id
+	WHERE R.relTypeCode = 'aritcle'
+	AND R.relId = 1
+
+    
+    #댓글에 좋아요 수, 싫어요 수 컬럼 추가
+	ALTER TABLE reply
+	ADD COLUMN goodReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
+	
+	ALTER TABLE reply
+	ADD COLUMN badReactionPoint INT(10) UNSIGNED NOT NULL DEFAULT 0;
+	
+	#댓글 수 많을떄 (쿼리문에 유효성검사)
+	ALTER TABLE `reply` ADD INDEX (`relTypeCode`, `relId`);
+    
     
