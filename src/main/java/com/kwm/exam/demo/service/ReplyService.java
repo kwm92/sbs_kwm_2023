@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.kwm.exam.demo.repository.ReplyRepository;
 import com.kwm.exam.demo.utill.Ut;
+import com.kwm.exam.demo.vo.Article;
 import com.kwm.exam.demo.vo.Reply;
 import com.kwm.exam.demo.vo.ResultData;
 
@@ -24,7 +25,48 @@ public class ReplyService {
 	}
 
 	public List<Reply> getForPrintReplies(int actorId, String relTypeCode, int relId) {
-		return replyRepository.getForPrintReplies(actorId, relTypeCode, relId);
+		List<Reply> replies = replyRepository.getForPrintReplies(actorId, relTypeCode, relId);
+		
+		for(Reply reply : replies) {
+			updateForPrintData(actorId,reply);
+		}
+		return replies;
+	}
+	
+	public ResultData actorCanModify(int actorId, Reply reply) {
+		if (reply == null) {
+			return ResultData.from("F-1", "댓글이 존재하지 없습니다.");
+		}
+
+		if (reply.getMemberId() != actorId) {
+			return ResultData.from("F-2", "권한이 없습니다.");
+		}
+
+		return ResultData.from("S-1", "댓글 수정이 가능합니다.");
+	}
+
+	private void updateForPrintData(int actorId, Reply reply) {
+		if (reply == null) {
+			return;
+		}
+
+		ResultData actorCanDelteRd = actorCanDelete(actorId, reply);
+		reply.setExtra__actorCanDelete(actorCanDelteRd.isSuccess());
+
+		ResultData actorCanMoidyRd = actorCanModify(actorId, reply);
+		reply.setExtra__actorCanModify(actorCanMoidyRd.isSuccess());
+	}
+	
+	public ResultData actorCanDelete(int actorId, Reply reply) {
+		if (reply == null) {
+			return ResultData.from("F-1", "댓글이 존재하지 없습니다.");
+		}
+
+		if (reply.getMemberId() != actorId) {
+			return ResultData.from("F-2", "권한이 없습니다.");
+		}
+
+		return ResultData.from("S-1", "댓글 삭제가 가능합니다.");
 	}
 
 }
