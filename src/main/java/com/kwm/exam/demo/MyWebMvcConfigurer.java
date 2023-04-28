@@ -8,6 +8,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.kwm.exam.demo.interceptor.BeforeActionInterceptor;
 import com.kwm.exam.demo.interceptor.NeedLoginInterceptor;
+import com.kwm.exam.demo.interceptor.NeedLogoutInterceptor;
 
 @Configuration
 public class MyWebMvcConfigurer implements WebMvcConfigurer {
@@ -17,6 +18,9 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 
 	@Autowired
 	NeedLoginInterceptor needLoginInterceptor;
+	
+	@Autowired
+	NeedLogoutInterceptor needLogoutInterceptor;
 
 	// 인터셉터 적용 역할
 	@Override
@@ -52,6 +56,16 @@ public class MyWebMvcConfigurer implements WebMvcConfigurer {
 		ir.addPathPatterns("/usr/reactionPoint/doBadReaction");
 		ir.addPathPatterns("/usr/reactionPoint/doCancelGoodeReaction");
 		ir.addPathPatterns("/usr/reactionPoint/doCancelBadReaction");
+		
+		ir = registry.addInterceptor(needLogoutInterceptor);
+		ir.addPathPatterns("/usr/member/join");
+		ir.addPathPatterns("/usr/member/doJoin");
+		ir.addPathPatterns("/usr/member/login");
+		ir.addPathPatterns("/usr/member/doLogin");
+		ir.addPathPatterns("/usr/member/findLoginId");
+		ir.addPathPatterns("/usr/member/doFindLoginId");
+		ir.addPathPatterns("/usr/member/findLoginPw");
+		ir.addPathPatterns("/usr/member/doFindLoginPw");
 		
 		
 	}
