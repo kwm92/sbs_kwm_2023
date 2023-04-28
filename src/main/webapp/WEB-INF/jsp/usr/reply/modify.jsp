@@ -5,9 +5,9 @@
 
 <script>
 	// 댓글작성 관련
-	let ReplyWrite__submitFormDone = false;
-	function ReplyWrite__submitForm(form) {
-		if ( ReplyWrite__submitFormDone ) {
+	let ReplyModify__submitDone = false;
+	function ReplyModify__submit(form) {
+		if ( ReplyModify__submitDone ) {
 			return;
 		}    
 		
@@ -15,26 +15,20 @@
 		form.body.value = form.body.value.trim();
 		
 		if ( form.body.value.length == 0 ) {
-			alert('댓글을 입력해주세요.');
+			alert('내용을 입력해주세요.');
 			form.body.focus();
 			return;
-		}
+		}		
 		
-		if ( form.body.value.length < 2 ) {
-			alert('댓글을 2자 이상 입력해주세요.');
-			form.body.focus();
-			return;
-		}
-		
-		ReplyWrite__submitFormDone = true;
+		ReplyModify__submitDone = true;
 		form.submit();		
 	}
 </script>
 
 <section class="mt-5">
   <div class="container mx-auto px-3">
-	<form class="table-box-type-1" method="POST" action="../article/doModify">
-	  <input type="hidden" name="id" value="${article.id}"/>
+	<form class="table-box-type-1" method="POST" action="../reply/doModify" onsubmit="ReplyModify__submit">
+	  <input type="hidden" name="id" value="${reply.id}"/>
 	
       <table>
       <colgroup>
@@ -42,63 +36,46 @@
       </colgroup>
         <tbody>
           <tr>
-            <th>번호</th>
+            <th>게시물 번호</th>
             <td>${article.id}</td>
           </tr>
           <tr>
-            <th>작성날짜</th>
-            <td>${article.getRegDateForPrint()}</td>
+            <th>댓글 번호</th>
+            <td>${reply.id}</td>
           </tr>
           <tr>
-            <th>수정날짜</th>
-            <td>${article.getUpdateDateForPrint()}</td>
+            <th>댓글 작성날짜</th>
+            <td>${reply.getRegDateForPrint()}</td>
           </tr>
           <tr>
-            <th>작성자</th>
-            <td>${article.extra__writerName}</td>
+            <th>댓글 수정날짜</th>
+            <td>${reply.getUpdateDateForPrint()}</td>
           </tr>
           <tr>
-            <th>조회수</th>
+            <th>댓글 작성자</th>
+            <td>${reply.extra__writerName}</td>
+          </tr>
+          <tr>
+            <th>댓글 추천</th>
             <td>
-            	<span class="text-blue-700 article-detail__hit-count">${article.hitCount}</span>
+            	<span class="text-blue-700">${reply__goodReactionPoint}</span>
 			</td>
-          </tr>
-          <tr>
-            <th>추천수</th>
-            <td>
-            	<span class="text-blue-700">${extra__goodReactionPoint}</span>
-			</td>
-          </tr>
-          <tr>
-            <th>제목</th>
-            <td>
-              <input type="text" class="w-96 input input-bordered w-full max-w-xs" name="title" placeholder="제목" value="${article.title}"/>
-            </td>
           </tr>
           <tr>
             <th>내용</th>
             <td>
-              <textarea type="text" class="w-full textarea textarea-bordered" name="body" placeholder="내용" >${article.body}</textarea>
+              <textarea rows="5" class="w-full textarea textarea-bordered" name="body" placeholder="내용" >${reply.body}</textarea>
             </td>
           </tr>
           <tr>
-            <th>수정</th>
+            <th>댓글 수정</th>
             <td>
-              <input type="submit" class="btn btn-primary" value="수정"/>
+              <input type="submit" class="btn btn-primary" value="댓글 수정"/>
               <button type="button" class="btn btn-outline btn-primary" onclick="history.back();">뒤로가기</button>
             </td>
           </tr>
         </tbody>
       </table>   
-	
-	  <div class="btns">
-		<button class="btn btn-link" type="button" onclick="history.back();">뒤로가기</button>
-		<a class="btn btn-link" href="../article/modify?id=${article.id}">게시물 수정</a>
-		
-		<c:if test="${article.extra__actorCanDelete}">
-			<a class="btn btn-link" onclick="if( confirm('정말 삭제하시겠습니까?') == false )return false;" href="../article/doDelete?id=${article.id}">게시물 삭제</a>
-		</c:if>	
-	  </div>
 	</form>
   </div>
 </section>
