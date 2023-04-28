@@ -68,7 +68,7 @@
 
 <section class="mt-5">
   <div class="container mx-auto px-3">
-	<form class="table-box-type-1" method="POST" action="../article/doModify" onsubmit="MemberModify__submit">
+	<form class="table-box-type-1" method="POST" action="../member/doModify" onsubmit="MemberModify__submit">
 	  <input type="hidden" name="id" value="${rq.loginedMember.id}"/>
 	
       <table>
