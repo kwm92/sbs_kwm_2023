@@ -27,7 +27,7 @@ public class UsrMemberController {
 	@ResponseBody
 	public ResultData getLoginIdDup(String loginId) {
 		if (Ut.empty(loginId)) {
-			return ResultData.from("F-1", "loginId(을)를 입력해주세요");
+			return ResultData.from("F-A1", "loginId(을)를 입력해주세요");
 		}
 		Member oldMember = memberService.getMemberByLoginId(loginId);
 

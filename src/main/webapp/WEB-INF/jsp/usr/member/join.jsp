@@ -2,6 +2,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="pageTitle" value="회원가입"/>
 <%@include file="../common/head.jspf" %>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js"></script>
 
 <script>
 	let MemberJoin__submitDone = false;
@@ -102,7 +103,16 @@
 			isAjax : 'Y',
 			loginId : form.loginId.value
 		},function(data) {
-			$('.loginId-msg').html('<div class="mt-2">' + data.msg + '</div>');
+			var $message =$(form.loginId).next();
+			
+			if(data.resultCode.substr(0,2) == "S-") {
+				$message.empty().append('<div class="mt-2 text-green-500">' + data.msg + '</div>')
+				validLoginId= data.data1;
+			}else {
+				$message.empty().append('<div class="mt-2 text-red-500">' + data.msg + '</div>')
+				validLoginId='';
+			}
+			
 			if(data.success) {
 				validLoginId = data.data1;
 			}else{
@@ -111,6 +121,7 @@
 		}, 'json');
 	}
 	
+	const checkLoginIdDupDebounced = _.debounce(checkLoginIdDup, 1000);
 </script>
 
 <section class="mt-5">
@@ -126,7 +137,7 @@
           <tr>
             <th>로그인아이디</th>
             <td>
-            	<input type="text" class="input input-bordered" name="loginId" placeholder="로그인 아이디를 입력해주세요." onkeyup="checkLoginIdDup(this);" autocomplete="off"/>
+            	<input type="text" class="input input-bordered" name="loginId" placeholder="로그인 아이디를 입력해주세요." onkeyup="checkLoginIdDupDebounced(this);" autocomplete="off"/>
             	<div class="loginId-msg"></div>
             </td>
           </tr>
