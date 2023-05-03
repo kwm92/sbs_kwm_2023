@@ -10,36 +10,10 @@ import org.apache.ibatis.annotations.Update;
 
 import com.kwm.exam.demo.vo.Member;
 
+
 @Mapper
 public interface MemberRepository {
-
-	@Select("""
-			SELECT *
-			FROM `member`
-			ORDER BY
-			id DESC
-			""")
-	public List<Member> getMembers();
-	
-	
-//	public void modifyMember(@Param("loginPw")String loginPw,@Param("name")String name);
-
-//	public void deleteMember(@Param("loginId")String loginId);
-	
-	@Select("SELECT LAST_INSERT_ID()")
-	int getLastInsertId();
-	
-	
-	@Select("""
-			SELECT * 
-			FROM `member` AS M
-			WHERE M.id = #{id}
-			""")
-	Member getMemberById(@Param("id") int id);
-	
-	
 	@Insert("""
-			
 			INSERT INTO `member`
 			SET regDate = NOW(),
 			updateDate = NOW(),
@@ -48,26 +22,42 @@ public interface MemberRepository {
 			`name` = #{name},
 			nickname = #{nickname},
 			cellphoneNo = #{cellphoneNo},
-			email = #{email}""")
-	void join(@Param("loginId") String loginId, @Param("loginPw") String loginPw, @Param("name") String name,
-			@Param("nickname") String nickname, @Param("cellphoneNo") String cellphoneNo, @Param("email") String email);
+			email = #{email}
+			""")
+	void join(@Param("loginId") String loginId, @Param("loginPw") String loginPw, @Param("name") String name, @Param("nickname") String nickname, @Param("cellphoneNo") String cellphoneNo, @Param("email") String email);
 
+	@Select("""
+			SELECT *
+			FROM `member`
+			ORDER BY
+			id DESC
+			""")
+	List<Member> getMembers();
+
+	@Select("SELECT LAST_INSERT_ID()")
+	int getLastInsertId();
 	
 	@Select("""
-			SELECT * 
+			SELECT *
+			FROM `member` AS M
+			WHERE M.id = #{id}
+			""")
+	Member getMemberById(@Param("id") int id);
+
+	@Select("""
+			SELECT *
 			FROM `member` AS M
 			WHERE M.loginId = #{loginId}
 			""")
 	Member getMemberByLoginId(@Param("loginId") String loginId);
 
-
 	@Select("""
-			SELECT * 
+			SELECT *
 			FROM `member` AS M
-			WHERE M.name = #{name},
+			WHERE M.name = #{name}
 			AND M.email = #{email}
 			""")
-	Member getMemberByNameAndEmail(@Param("name")String name, @Param("email")String email);
+	Member getMemberByNameAndEmail(@Param("name") String name, @Param("email") String email);
 
 	@Update("""
 			<script>
@@ -94,5 +84,4 @@ public interface MemberRepository {
 			</script>
 			""")
 	void modify(int id, String loginPw, String name, String nickname, String email, String cellphoneNo);
-
 }
